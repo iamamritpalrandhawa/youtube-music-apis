@@ -1202,6 +1202,105 @@ const parseArtistsSuggestionsItem = (item: {
   };
 };
 
+export const parseSuggestions = (item: {
+  musicTwoRowItemRenderer: {
+    thumbnailRenderer: {
+      musicThumbnailRenderer: {
+        thumbnail: {
+          thumbnails: {
+            url: string;
+          }[];
+        };
+      };
+    };
+    title: {
+      runs: {
+        text: string;
+        navigationEndpoint: {
+          browseEndpoint: {
+            browseId: string;
+          };
+        };
+      }[];
+    };
+    subtitle: {
+      runs: {
+        text: string;
+        navigationEndpoint: {
+          browseEndpoint: {
+            browseId: string;
+          };
+        };
+      }[];
+    };
+    navigationEndpoint: {
+      clickTrackingParams: string;
+      browseEndpoint: {
+        browseId: string;
+        browseEndpointContextSupportedConfigs: {
+          browseEndpointContextMusicConfig: {
+            pageType: string;
+          };
+        };
+      };
+    };
+  };
+}): {
+  artistId: string | undefined;
+  name: string | undefined;
+  artist: string | undefined;
+  thumbnailUrl: string | undefined;
+  albumId: string | undefined;
+} => {
+  let artistId;
+  try {
+    artistId =
+      item.musicTwoRowItemRenderer.subtitle.runs[2].navigationEndpoint
+        .browseEndpoint.browseId;
+  } catch (e) {
+    console.error("Couldn't get artistId", e);
+  }
+
+  let name;
+  try {
+    name = item.musicTwoRowItemRenderer.title.runs[0].text;
+  } catch (e) {
+    console.error("Couldn't get name", e);
+  }
+
+  let artist;
+  try {
+    artist = item.musicTwoRowItemRenderer.subtitle.runs[2].text;
+  } catch (e) {
+    console.error("Couldn't get subscribers", e);
+  }
+
+  let thumbnailUrl;
+  try {
+    thumbnailUrl =
+      item.musicTwoRowItemRenderer.thumbnailRenderer.musicThumbnailRenderer.thumbnail.thumbnails.pop()
+        ?.url;
+  } catch (e) {
+    console.error("Couldn't get thumbnailUrl", e);
+  }
+
+  let albumId;
+  try {
+    albumId =
+      item.musicTwoRowItemRenderer.navigationEndpoint.browseEndpoint.browseId;
+  } catch (e) {
+    console.error("Couldn't get thumbnailUrl", e);
+  }
+
+  return {
+    artistId,
+    name,
+    artist,
+    thumbnailUrl,
+    albumId,
+  };
+};
+
 export const parseVideoData = (data: {
   videoDetails: {
     videoId: string;

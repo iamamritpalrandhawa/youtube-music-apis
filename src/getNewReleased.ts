@@ -1,21 +1,18 @@
 import context from "./context.js";
 import { Playlist } from "./models.js";
-import { parsePlaylist } from "./parsers.js";
+import { parseSuggestions } from "./parsers.js";
 import axios from "axios";
 
 /**
- * Fetches and parses playlist data by playlist ID.
- * @param playlistId The ID of the playlist to fetch.
+ * Fetches and parses a playable item by its ID.
  * @param options Optional settings for language and country preferences.
- * @returns A promise resolving to the parsed playlist data or null if an error occurs.
+ * @returns A promise resolving to the playable item data.
  */
-export async function getPlaylist(
-  playlistId: string,
-  options?: {
-    lang: string;
-    country: string;
-  }
-): Promise<Playlist | null> {
+
+export async function getNewReleased(options?: {
+  lang: string;
+  country: string;
+}): Promise<Playlist | null> {
   const response = await axios.post(
     "https://music.youtube.com/youtubei/v1/browse",
     {
@@ -31,7 +28,7 @@ export async function getPlaylist(
           vis: 10,
         },
       },
-      browseId: playlistId,
+      browseId: "FEmusic_new_releases",
     },
     {
       headers: {
@@ -45,8 +42,13 @@ export async function getPlaylist(
   );
 
   try {
-    const data = parsePlaylist(response.data.contents);
-    if (data) data.id = playlistId;
+    let data =
+      response.data.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content.sectionListRenderer.contents[1].musicCarouselShelfRenderer.contents.map(
+        (n: any) => {
+          return parseSuggestions(n);
+        }
+      );
+
     return data;
   } catch (e) {
     console.error(e);

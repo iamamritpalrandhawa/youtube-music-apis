@@ -1,7 +1,7 @@
 {
   "name": "youtube-music-apis",
   "description": "Unofficial YouTube Music API for Node.js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "exports": "./dist/index.js",
   "files": [
     "dist"

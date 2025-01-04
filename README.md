@@ -23,6 +23,21 @@ This API provides a variety of functions to explore and interact with YouTube Mu
 
 # Usage Instructions
 
+## Get Trending Songs
+
+Use the `getNewReleased` function to get Trending Songs
+
+### Example:
+
+```js
+import { getNewReleased } from "youtube-music-apis";
+const { getNewReleased } = require("youtube-music-apis");
+
+const main = async () => await getNewReleased();
+
+main().then((results) => console.log(results));
+```
+
 ## Searching for Albums
 
 Use the `searchForAlbums` function to search for albums by their YouTube Music ID.
